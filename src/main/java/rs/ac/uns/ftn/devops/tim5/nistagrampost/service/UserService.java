@@ -9,5 +9,5 @@ public interface UserService {
     
     void create(String username, String email);
 
-    void delete(String username);
+    void delete(String username) throws ResourceNotFoundException;
 }

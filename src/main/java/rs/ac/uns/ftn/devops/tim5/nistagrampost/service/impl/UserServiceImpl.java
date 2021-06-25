@@ -24,12 +24,12 @@ public class UserServiceImpl implements UserService {
     
     public void create(String username, String email) {
         User user = new User(username, email);
-        User userSaved = userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
-    public void delete(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User"));
+    public void delete(String username) throws ResourceNotFoundException {
+        User user = this.findByUsername(username);
         userRepository.delete(user);
     }
 }

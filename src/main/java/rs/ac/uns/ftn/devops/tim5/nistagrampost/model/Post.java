@@ -30,10 +30,10 @@ public class Post {
     @ManyToMany(cascade = CascadeType.MERGE)
     private Set<Tag> tags;
 
-    public Post(Long mediaId, String description, User user, Set<Tag> tags) {
+    public Post(Long mediaId, String description, Set<Tag> tags) {
         this.mediaId = mediaId;
         this.description = description;
-        this.user = user;
         this.tags = tags;
     }
+
 }

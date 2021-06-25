@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @Getter
@@ -13,8 +14,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class PostRequestDTO {
 
+    @NotNull(message = "Media can not be null")
     private Long mediaId;
+
     private String description;
-    private String userUsername;
+
     private Set<TagDTO> tags;
+
 }

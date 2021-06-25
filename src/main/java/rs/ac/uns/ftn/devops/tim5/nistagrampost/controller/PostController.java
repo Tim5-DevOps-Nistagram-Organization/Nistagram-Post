@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.dto.PostRequestDTO;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.saga.PostOrchestrator;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.mapper.PostMapper;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.saga.PostOrchestrator;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
+
+import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/post")
@@ -26,11 +29,10 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody PostRequestDTO postRequestDTO) throws Exception {
-        Post post = postService.create(PostMapper.toEntity(postRequestDTO));
+    public ResponseEntity<String> create(@Valid @RequestBody PostRequestDTO postRequestDTO, Principal principal) throws Exception {
+        Post post = postService.create(PostMapper.toEntity(postRequestDTO), principal.getName());
         postOrchestrator.startSaga(post);
-        return new ResponseEntity<>("Sačuvan post sa id " + post.getId(), HttpStatus.OK);
+        return new ResponseEntity<>("Post is successfully saved.", HttpStatus.OK);
     }
-
 
 }

@@ -21,12 +21,9 @@ public class PostServiceImpl implements PostService {
         this.tagService = tagService;
     }
 
-    //TODO:
-    // korisnika je potrebno izvuci iza autha a ne iz postdto
-    //
     @Override
-    public Post create(Post post) throws ResourceNotFoundException {
-        post.setUser(userService.findByUsername(post.getUser().getUsername()));
+    public Post create(Post post, String username) throws ResourceNotFoundException {
+        post.setUser(userService.findByUsername(username));
         post.setTags(tagService.getTagsForPost(post.getTags()));
         return postRepository.save(post);
     }

@@ -4,7 +4,7 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundExcepti
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
 
 public interface PostService {
-    Post create(Post post) throws ResourceNotFoundException;
+    Post create(Post post, String username) throws ResourceNotFoundException;
 
     void delete(Long id);
 }
