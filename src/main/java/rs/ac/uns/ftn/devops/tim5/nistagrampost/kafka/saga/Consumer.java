@@ -13,6 +13,8 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.UserMessage;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.UserService;
 
+import javax.mail.MessagingException;
+
 @Service
 public class Consumer {
 
@@ -31,7 +33,7 @@ public class Consumer {
     }
 
     @KafkaListener(topics = Constants.POST_TOPIC, groupId = Constants.GROUP)
-    public void getMessage(String msg) throws ResourceNotFoundException {
+    public void getMessage(String msg) throws ResourceNotFoundException, MessagingException {
         Message message = gson.fromJson(msg, Message.class);
         if (message.getReplayTopic().equals(Constants.USER_ORCHESTRATOR_TOPIC)) {
             UserMessage userMessage = gson.fromJson(msg, UserMessage.class);
@@ -51,7 +53,6 @@ public class Consumer {
                 message.getAction().equals(Constants.ROLLBACK_ACTION)) {
             PostMessage postMessage = gson.fromJson(msg, PostMessage.class);
             postService.delete(postMessage.getPostId());
-            //todo add mail
         }
     }
 }
