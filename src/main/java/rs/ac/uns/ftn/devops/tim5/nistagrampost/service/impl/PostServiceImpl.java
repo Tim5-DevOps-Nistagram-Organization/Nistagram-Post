@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.service.impl;
 
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundException;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.Constants;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.repository.PostRepository;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
