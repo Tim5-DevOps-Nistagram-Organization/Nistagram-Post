@@ -9,4 +9,6 @@ public interface PostService {
     Post create(Post post, String username) throws ResourceNotFoundException;
 
     void delete(Long id) throws ResourceNotFoundException, MessagingException;
+
+    Post findById(Long id) throws ResourceNotFoundException;
 }
