@@ -26,10 +26,19 @@ public class PostOrchestrator {
     }
 
     @Async
-    public void startSaga(Post post) {
-        PostMessage message = new PostMessage(Constants.SEARCH_TOPIC, Constants.POST_ORCHESTRATOR_TOPIC,
-                Constants.START_ACTION, post.getId(), post.getMediaId(), post.getUser().getUsername(),
-                post.getTags().stream().map(Tag::getTitle).collect(Collectors.toSet()));
+    public void startSaga(Post post, String action) {
+        PostMessage message = null;
+        if (action.equals(Constants.DELETE_ACTION)) {
+            message = new PostMessage(Constants.SEARCH_TOPIC, Constants.POST_ORCHESTRATOR_TOPIC,
+                    action, post.getId(), post.getMediaId(), post.getUser().getUsername(),
+                    null);
+
+        } else {
+            message = new PostMessage(Constants.SEARCH_TOPIC, Constants.POST_ORCHESTRATOR_TOPIC,
+                    action, post.getId(), post.getMediaId(), post.getUser().getUsername(),
+                    post.getTags().stream().map(Tag::getTitle).collect(Collectors.toSet()));
+        }
+
         this.kafkaTemplate.send(message.getTopic(), gson.toJson(message));
     }
 

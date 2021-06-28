@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.dto.ReactionCreateRequestDTO;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.dto.ReactionUpdateRequestDTO;
@@ -29,6 +30,7 @@ public class ReactionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_REGULAR') || hasRole('ROLE_AGENT')")
     public ResponseEntity<String> create(@Valid @RequestBody ReactionCreateRequestDTO reactionRequestDTO, Principal principal) throws Exception {
         Reaction reaction = reactionService.create(ReactionMapper.newToEntity(reactionRequestDTO), principal.getName());
         reactionOrchestrator.startSaga(reaction, Constants.START_ACTION);
@@ -36,6 +38,7 @@ public class ReactionController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_REGULAR') || hasRole('ROLE_AGENT')")
     public ResponseEntity<String> update(@Valid @RequestBody ReactionUpdateRequestDTO reactionRequestDTO, Principal principal) throws Exception {
         Reaction reaction = reactionService.update(ReactionMapper.updateToEntity(reactionRequestDTO));
         reactionOrchestrator.startSaga(reaction, Constants.UPDATE_ACTION);
@@ -43,6 +46,7 @@ public class ReactionController {
     }
 
     @DeleteMapping(path = "/{reactionId}")
+    @PreAuthorize("hasRole('ROLE_REGULAR') || hasRole('ROLE_AGENT')")
     public ResponseEntity<String> delete(@Valid @PathVariable Long reactionId) throws Exception {
         reactionService.delete(reactionId);
         Reaction reaction = new Reaction(reactionId);

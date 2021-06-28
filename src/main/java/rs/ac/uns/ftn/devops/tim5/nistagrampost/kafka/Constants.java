@@ -10,6 +10,7 @@ public class Constants {
     public static final String POST_ORCHESTRATOR_TOPIC = "post_orchestrator_topic";
     public static final String USER_ORCHESTRATOR_TOPIC = "user_orchestrator_topic";
     public static final String REACTION_ORCHESTRATOR_TOPIC = "reaction_orchestrator_topic";
+    public static final String UNAPPROPRIATED_CONTENT_ORCHESTRATOR_TOPIC = "unappropriated_content_orchestrator_topic";
     public static final String POST_TOPIC = "post_topic";
     public static final String SEARCH_TOPIC = "search_topic";
     public static final String REACTION_TOPIC = "reaction_topic";
