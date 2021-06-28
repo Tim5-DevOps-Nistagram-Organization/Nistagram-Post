@@ -5,7 +5,7 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
 import java.util.stream.Stream;
 
 public enum  ReactionEnum {
-    LIKE(1), DISLIKE(2), FAVOURITES(3);;
+    LIKE(1), DISLIKE(2);
 
     private int value;
 
