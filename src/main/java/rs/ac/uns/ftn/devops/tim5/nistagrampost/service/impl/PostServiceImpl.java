@@ -2,19 +2,11 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.service.impl;
 
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundException;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.Constants;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.User;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.repository.PostRepository;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.repository.ReactionRepository;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.MailService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.TagService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.UserService;
-
-import javax.mail.MessagingException;
-import java.util.Collection;
 
 @Service
 public class PostServiceImpl implements PostService {
