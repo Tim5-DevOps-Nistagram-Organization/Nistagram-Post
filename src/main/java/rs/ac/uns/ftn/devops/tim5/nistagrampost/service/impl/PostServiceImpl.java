@@ -25,8 +25,7 @@ public class PostServiceImpl implements PostService {
 
     public PostServiceImpl(PostRepository postRepository,
                            UserService userService,
-                           TagService tagService,
-                           ReactionRepository reactionRepository) {
+                           TagService tagService) {
         this.postRepository = postRepository;
         this.userService = userService;
         this.tagService = tagService;
