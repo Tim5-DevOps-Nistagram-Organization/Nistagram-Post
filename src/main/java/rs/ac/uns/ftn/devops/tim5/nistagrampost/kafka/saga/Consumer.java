@@ -9,8 +9,10 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundExcepti
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.Constants;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.Message;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.PostMessage;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.ReactionMessage;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.UserMessage;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.ReactionService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.UserService;
 
 import javax.mail.MessagingException;
@@ -20,14 +22,16 @@ public class Consumer {
 
     private final PostService postService;
     private final UserService userService;
+    private final ReactionService reactionService;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
 
     @Autowired
-    public Consumer(PostService postService, UserService userService, KafkaTemplate<String, String> kafkaTemplate,
+    public Consumer(PostService postService, UserService userService, ReactionService reactionService, KafkaTemplate<String, String> kafkaTemplate,
                     Gson gson) {
         this.postService = postService;
         this.userService = userService;
+        this.reactionService = reactionService;
         this.kafkaTemplate = kafkaTemplate;
         this.gson = gson;
     }
@@ -53,6 +57,10 @@ public class Consumer {
                 message.getAction().equals(Constants.ROLLBACK_ACTION)) {
             PostMessage postMessage = gson.fromJson(msg, PostMessage.class);
             postService.delete(postMessage.getPostId());
+        }  else if (message.getReplayTopic().equals(Constants.REACTION_ORCHESTRATOR_TOPIC) &&
+            message.getAction().equals(Constants.ROLLBACK_ACTION)) {
+        ReactionMessage reactionMessage = gson.fromJson(msg, ReactionMessage.class);
+        reactionService.delete(reactionMessage.getReactionId());
         }
     }
 }

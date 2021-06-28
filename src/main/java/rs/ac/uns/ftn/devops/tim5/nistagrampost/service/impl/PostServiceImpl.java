@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(Long id) throws ResourceNotFoundException, MessagingException {
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post"));
+        Post post = this.findById(id);
         String email = post.getUser().getEmail();
         postRepository.delete(post);
         String subject = "Something went wrong!";
@@ -47,5 +47,12 @@ public class PostServiceImpl implements PostService {
                 + "</p></div></body></html>";
         mailService.sendMail(email, subject, message);
     }
+
+    @Override
+    public Post findById(Long id) throws ResourceNotFoundException {
+        return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post"));
+    }
+
+
 }
 
