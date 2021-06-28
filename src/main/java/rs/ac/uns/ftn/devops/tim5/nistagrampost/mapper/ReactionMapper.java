@@ -20,4 +20,5 @@ public class ReactionMapper {
         return new Reaction(requestDTO.getId(), ReactionEnum.of(requestDTO.getReaction()));
 
     }
+
 }

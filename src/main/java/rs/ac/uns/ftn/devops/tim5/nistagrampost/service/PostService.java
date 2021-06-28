@@ -8,7 +8,7 @@ import javax.mail.MessagingException;
 public interface PostService {
     Post create(Post post, String username) throws ResourceNotFoundException;
 
-    void delete(Long id) throws ResourceNotFoundException, MessagingException;
+    void delete(Post post);
 
     Post findById(Long id) throws ResourceNotFoundException;
 }

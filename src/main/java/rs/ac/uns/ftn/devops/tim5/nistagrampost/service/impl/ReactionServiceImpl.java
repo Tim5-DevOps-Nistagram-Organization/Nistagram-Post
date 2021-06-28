@@ -9,6 +9,8 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.ReactionService;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.UserService;
 
+import java.util.Collection;
+
 @Service
 public class ReactionServiceImpl implements ReactionService {
 
@@ -50,5 +52,10 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public Reaction findById(Long id) throws ResourceNotFoundException {
         return reactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction"));
+    }
+
+    @Override
+    public Collection<Reaction> findAllByPostId(Long id) {
+        return reactionRepository.findAllByPostId(id);
     }
 }

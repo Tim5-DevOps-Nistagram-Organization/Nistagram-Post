@@ -2,12 +2,13 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums;
 
 import java.util.stream.Stream;
 
-public enum  ReactionEnum {
-    LIKE(1), DISLIKE(2);
+public enum UnapropriatedContentState {
+
+    REQUESTED(1), CONFIRMED(2), REJECTED(3);
 
     private int value;
 
-    private ReactionEnum(int value) {
+    private UnapropriatedContentState(int value) {
         this.value = value;
     }
 
@@ -15,10 +16,11 @@ public enum  ReactionEnum {
         return value;
     }
 
-    public static ReactionEnum of(int value) {
-        return Stream.of(ReactionEnum.values())
+    public static UnapropriatedContentState of(int value) {
+        return Stream.of(UnapropriatedContentState.values())
                 .filter(p -> p.getValue() == value)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
 }
+

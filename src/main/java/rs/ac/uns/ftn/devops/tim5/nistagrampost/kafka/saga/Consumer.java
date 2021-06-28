@@ -7,13 +7,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.Constants;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.Message;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.PostMessage;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.ReactionMessage;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.UserMessage;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.PostService;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.ReactionService;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.UserService;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.kafka.*;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.*;
 
 import javax.mail.MessagingException;
 
@@ -23,17 +19,26 @@ public class Consumer {
     private final PostService postService;
     private final UserService userService;
     private final ReactionService reactionService;
+    private final UnappropriatedContentService unappropriatedContentService;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
+    private final MailService mailService;
 
     @Autowired
-    public Consumer(PostService postService, UserService userService, ReactionService reactionService, KafkaTemplate<String, String> kafkaTemplate,
-                    Gson gson) {
+    public Consumer(PostService postService,
+                    UserService userService,
+                    ReactionService reactionService,
+                    UnappropriatedContentService unappropriatedContentService,
+                    KafkaTemplate<String, String> kafkaTemplate,
+                    Gson gson,
+                    MailService mailService) {
         this.postService = postService;
         this.userService = userService;
         this.reactionService = reactionService;
+        this.unappropriatedContentService = unappropriatedContentService;
         this.kafkaTemplate = kafkaTemplate;
         this.gson = gson;
+        this.mailService = mailService;
     }
 
     @KafkaListener(topics = Constants.POST_TOPIC, groupId = Constants.GROUP)
@@ -56,11 +61,24 @@ public class Consumer {
         } else if (message.getReplayTopic().equals(Constants.POST_ORCHESTRATOR_TOPIC) &&
                 message.getAction().equals(Constants.ROLLBACK_ACTION)) {
             PostMessage postMessage = gson.fromJson(msg, PostMessage.class);
-            postService.delete(postMessage.getPostId());
+            Post post = postService.findById(postMessage.getPostId());
+            String email = post.getUser().getEmail();
+            postService.delete(post);
+            String subject = "Something went wrong!";
+            String emailMessage = "<html><head><meta charset=\"UTF-8\"></head>"
+                    + "<body><h3>Nistagram app - Something went wrong!</h3><br>"
+                    + "<div><p>Something went wrong with publishing post, please try again!"
+                    + "</p></div></body></html>";
+            mailService.sendMail(email, subject, emailMessage);
         }  else if (message.getReplayTopic().equals(Constants.REACTION_ORCHESTRATOR_TOPIC) &&
             message.getAction().equals(Constants.ROLLBACK_ACTION)) {
         ReactionMessage reactionMessage = gson.fromJson(msg, ReactionMessage.class);
         reactionService.delete(reactionMessage.getReactionId());
+        //@TODO: da li slati adminima mejl da je puklo negde
+        } else if (message.getReplayTopic().equals(Constants.UNAPPROPRIATED_CONTENT_ORCHESTRATOR_TOPIC) &&
+                message.getAction().equals(Constants.ROLLBACK_ACTION)) {
+            ContentReportMessage contentReportMessage = gson.fromJson(msg, ContentReportMessage.class);
+            unappropriatedContentService.delete(contentReportMessage.getUnappropriatedContentId());
         }
     }
 }
