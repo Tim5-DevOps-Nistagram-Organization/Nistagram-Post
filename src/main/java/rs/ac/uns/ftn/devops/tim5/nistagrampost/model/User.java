@@ -22,6 +22,7 @@ public class User {
     private Long id;
     private String username;
     private String email;
+    private String websiteUrl;
 
     public User(String username, String email) {
         this.username = username;
