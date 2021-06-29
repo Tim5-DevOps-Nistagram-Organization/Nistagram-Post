@@ -22,8 +22,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User"));
     }
     
-    public void create(String username, String email) {
+    public void create(String username, String email, String websiteUrl) {
         User user = new User(username, email);
+        user.setWebsiteUrl(websiteUrl);
         userRepository.save(user);
     }
 

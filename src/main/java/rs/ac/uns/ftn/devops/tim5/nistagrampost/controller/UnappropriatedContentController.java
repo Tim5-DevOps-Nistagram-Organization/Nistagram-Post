@@ -74,12 +74,4 @@ public class UnappropriatedContentController {
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
-
 }
