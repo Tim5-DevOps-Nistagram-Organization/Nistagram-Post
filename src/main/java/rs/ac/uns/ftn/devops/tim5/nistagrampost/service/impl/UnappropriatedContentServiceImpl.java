@@ -57,6 +57,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
 
     @Override
     public UnappropriatedContent create(UnappropriatedContent content, String username) throws ResourceNotFoundException {
+        postService.findById(content.getPostId());
         content.setInitiator(userService.findByUsername(username));
         content.setState(UnapropriatedContentState.REQUESTED);
         return unappropriatedContentRepository.save(content);
