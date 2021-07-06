@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.exception.ResourceNotFoundExcepti
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.Constants;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.saga.PostOrchestrator;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.kafka.saga.ReactionOrchestrator;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Comment;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.UnappropriatedContent;
@@ -26,6 +27,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
     private ReactionService reactionService;
     private ReactionOrchestrator reactionOrchestrator;
     private PostOrchestrator postOrchestrator;
+    private CommentService commentService;
 
     @Autowired
     public UnappropriatedContentServiceImpl(
@@ -35,7 +37,8 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
             MailService mailService,
             ReactionService reactionService,
             ReactionOrchestrator reactionOrchestrator,
-            PostOrchestrator postOrchestrator) {
+            PostOrchestrator postOrchestrator,
+            CommentService commentService) {
         this.unappropriatedContentRepository = unappropriatedContentRepository;
         this.userService = userService;
         this.postService =postService;
@@ -43,6 +46,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
         this.reactionService = reactionService;
         this.reactionOrchestrator = reactionOrchestrator;
         this.postOrchestrator = postOrchestrator;
+        this.commentService = commentService;
     }
 
     @Override
@@ -69,6 +73,13 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
             reactionService.delete(reaction.getId());
             reactionOrchestrator.startSaga(reaction, Constants.DELETE_ACTION);
         }
+
+        // delete all Post Comments
+        Collection<Comment> postComments = commentService.findAllByPostId(old.getPostId());
+        for(Comment comment: postComments) {
+            commentService.delete(comment.getId());
+        }
+
         //delete Post and start delete saga for Post
         postOrchestrator.startSaga(post, Constants.DELETE_ACTION);
         postService.delete(post);
