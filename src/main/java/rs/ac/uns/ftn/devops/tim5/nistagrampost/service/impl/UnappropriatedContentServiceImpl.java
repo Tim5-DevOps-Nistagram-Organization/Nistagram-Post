@@ -10,7 +10,7 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Comment;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.UnappropriatedContent;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnapropriatedContentState;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnappropriatedContentState;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.repository.UnappropriatedContentRepository;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.*;
 
@@ -20,14 +20,14 @@ import java.util.Collection;
 @Service
 public class UnappropriatedContentServiceImpl implements UnappropriatedContentService {
 
-    private UnappropriatedContentRepository unappropriatedContentRepository;
-    private UserService userService;
-    private PostService postService;
-    private MailService mailService;
-    private ReactionService reactionService;
-    private ReactionOrchestrator reactionOrchestrator;
-    private PostOrchestrator postOrchestrator;
-    private CommentService commentService;
+    private final UnappropriatedContentRepository unappropriatedContentRepository;
+    private final UserService userService;
+    private final PostService postService;
+    private final MailService mailService;
+    private final ReactionService reactionService;
+    private final ReactionOrchestrator reactionOrchestrator;
+    private final PostOrchestrator postOrchestrator;
+    private final CommentService commentService;
 
     @Autowired
     public UnappropriatedContentServiceImpl(
@@ -41,7 +41,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
             CommentService commentService) {
         this.unappropriatedContentRepository = unappropriatedContentRepository;
         this.userService = userService;
-        this.postService =postService;
+        this.postService = postService;
         this.mailService = mailService;
         this.reactionService = reactionService;
         this.reactionOrchestrator = reactionOrchestrator;
@@ -51,7 +51,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
 
     @Override
     public UnappropriatedContent findById(Long id) throws ResourceNotFoundException {
-        return  unappropriatedContentRepository.findById(id)
+        return unappropriatedContentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Unappropriated Content"));
     }
 
@@ -59,7 +59,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
     public UnappropriatedContent create(UnappropriatedContent content, String username) throws ResourceNotFoundException {
         postService.findById(content.getPostId());
         content.setInitiator(userService.findByUsername(username));
-        content.setState(UnapropriatedContentState.REQUESTED);
+        content.setState(UnappropriatedContentState.REQUESTED);
         return unappropriatedContentRepository.save(content);
     }
 
@@ -70,14 +70,14 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
 
         // delete all Reactions for post
         Collection<Reaction> postReactions = reactionService.findAllByPostId(old.getPostId());
-        for (Reaction reaction: postReactions) {
+        for (Reaction reaction : postReactions) {
             reactionService.delete(reaction.getId());
             reactionOrchestrator.startSaga(reaction, Constants.DELETE_ACTION);
         }
 
         // delete all Post Comments
         Collection<Comment> postComments = commentService.findAllByPostId(old.getPostId());
-        for(Comment comment: postComments) {
+        for (Comment comment : postComments) {
             commentService.delete(comment.getId());
         }
 
@@ -85,7 +85,7 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
         postOrchestrator.startSaga(post, Constants.DELETE_ACTION);
         postService.delete(post);
 
-        old.setState(UnapropriatedContentState.CONFIRMED);
+        old.setState(UnappropriatedContentState.CONFIRMED);
 
         String email = old.getInitiator().getEmail();
         String subject = "Post deleted due Unappropriate contentn reports!";
@@ -99,18 +99,18 @@ public class UnappropriatedContentServiceImpl implements UnappropriatedContentSe
     @Override
     public UnappropriatedContent reject(Long id) throws ResourceNotFoundException {
         UnappropriatedContent old = this.findById(id);
-        old.setState(UnapropriatedContentState.REJECTED);
+        old.setState(UnappropriatedContentState.REJECTED);
         return unappropriatedContentRepository.save(old);
     }
 
     @Override
     public Collection<UnappropriatedContent> findAllRequested() throws ResourceNotFoundException {
         Collection<UnappropriatedContent> retVal =
-                unappropriatedContentRepository.findAllByState(UnapropriatedContentState.REQUESTED);
-        for (UnappropriatedContent val: retVal) {
+                unappropriatedContentRepository.findAllByState(UnappropriatedContentState.REQUESTED);
+        for (UnappropriatedContent val : retVal) {
             val.setPost(postService.findById(val.getPostId()));
         }
-        return  retVal;
+        return retVal;
     }
 
     @Override

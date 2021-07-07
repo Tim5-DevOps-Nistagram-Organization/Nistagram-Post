@@ -6,17 +6,14 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Comment;
 
 public class CommentMapper {
 
-    private CommentMapper(){}
+    private CommentMapper() {
+    }
 
     public static Comment toEntity(CommentCreateDTO createDTO) {
         return new Comment(createDTO.getPostId(), createDTO.getMessage());
     }
 
     public static CommentDTO toDTO(Comment comment) {
-        return new CommentDTO(comment.getWriter().getUsername(),
-                comment.getMessage(),
-                comment.getDate(),
-                comment.getPost().getId(),
-                comment.getId());
+        return new CommentDTO(comment.getWriter().getUsername(), comment.getMessage(), comment.getDate());
     }
 }

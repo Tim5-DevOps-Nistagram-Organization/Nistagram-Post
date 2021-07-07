@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.ReactionEnum;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnappropriatedContentResponseDTO {
-
+public class ReactionDTO {
     private Long id;
-    private String requesterUsername;
-    private String description;
-    private Long mediaId;
+    private ReactionEnum reaction;
 }

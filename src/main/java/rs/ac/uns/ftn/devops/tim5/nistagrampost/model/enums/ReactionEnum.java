@@ -2,17 +2,13 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums;
 
 import java.util.stream.Stream;
 
-public enum  ReactionEnum {
+public enum ReactionEnum {
     LIKE(1), DISLIKE(2);
 
     private int value;
 
-    private ReactionEnum(int value) {
+    ReactionEnum(int value) {
         this.value = value;
-    }
-
-    public int getValue() {
-        return value;
     }
 
     public static ReactionEnum of(int value) {
@@ -20,5 +16,9 @@ public enum  ReactionEnum {
                 .filter(p -> p.getValue() == value)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public int getValue() {
+        return value;
     }
 }

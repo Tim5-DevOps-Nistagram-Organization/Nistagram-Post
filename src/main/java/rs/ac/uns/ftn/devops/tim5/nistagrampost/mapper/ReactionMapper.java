@@ -6,13 +6,15 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.ReactionEnum;
 
-
 public class ReactionMapper {
+
+    private ReactionMapper() {
+    }
 
     public static Reaction newToEntity(ReactionCreateRequestDTO requestDTO) {
         Post post = new Post();
         post.setId(requestDTO.getPostId());
-        return  new Reaction(ReactionEnum.of(requestDTO.getReaction()),post);
+        return new Reaction(ReactionEnum.of(requestDTO.getReaction()), post);
 
     }
 

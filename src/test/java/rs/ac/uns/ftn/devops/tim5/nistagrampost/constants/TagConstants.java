@@ -5,13 +5,13 @@ import java.util.Arrays;
 
 public class TagConstants {
 
-    private TagConstants(){}
-
     public static ArrayList<String> VALID_TAG_NAMES = new ArrayList<>(
-                                                                Arrays.asList("tag1",
-                                                                              "tag2",
-                                                                              "tag3"));
+            Arrays.asList("tag1",
+                    "tag2",
+                    "tag3"));
+    public static int NUMBER_OF_TAGS = 3;
 
-    public static int  NUMBER_OF_TAGS = 3;
+    private TagConstants() {
+    }
 
 }
