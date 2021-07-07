@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.UnappropriatedContent;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnapropriatedContentState;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnappropriatedContentState;
 
 import java.util.Collection;
 
@@ -13,5 +13,5 @@ import java.util.Collection;
 public interface UnappropriatedContentRepository extends JpaRepository<UnappropriatedContent, Long> {
 
     @Query("SELECT r FROM UnappropriatedContent r WHERE r.state = ?1")
-    Collection<UnappropriatedContent> findAllByState(UnapropriatedContentState state);
+    Collection<UnappropriatedContent> findAllByState(UnappropriatedContentState state);
 }

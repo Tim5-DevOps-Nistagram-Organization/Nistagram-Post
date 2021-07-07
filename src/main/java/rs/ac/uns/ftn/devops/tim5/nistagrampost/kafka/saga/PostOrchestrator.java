@@ -27,7 +27,7 @@ public class PostOrchestrator {
 
     @Async
     public void startSaga(Post post, String action) {
-        PostMessage message = null;
+        PostMessage message;
         if (action.equals(Constants.DELETE_ACTION)) {
             message = new PostMessage(Constants.SEARCH_TOPIC, Constants.POST_ORCHESTRATOR_TOPIC,
                     action, post.getId(), post.getMediaId(), post.getUser().getUsername(),

@@ -41,8 +41,8 @@ public class ReactionController {
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_REGULAR') || hasRole('ROLE_AGENT')")
-    public ResponseEntity<String> update(@Valid @RequestBody ReactionUpdateRequestDTO reactionRequestDTO,
-                                         Principal principal) throws  ResourceNotFoundException  {
+    public ResponseEntity<String> update(@Valid @RequestBody ReactionUpdateRequestDTO reactionRequestDTO)
+            throws  ResourceNotFoundException  {
         Reaction reaction = reactionService.update(ReactionMapper.updateToEntity(reactionRequestDTO));
         reactionOrchestrator.startSaga(reaction, Constants.UPDATE_ACTION);
         return new ResponseEntity<>("Reaction is successfully updated.", HttpStatus.OK);

@@ -101,7 +101,7 @@
         </dependency>
     </dependencies>
 
-            <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -222,7 +222,7 @@
             </build>
         </profile>
     </profiles>
-            <repositories>
+    <repositories>
         <repository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>

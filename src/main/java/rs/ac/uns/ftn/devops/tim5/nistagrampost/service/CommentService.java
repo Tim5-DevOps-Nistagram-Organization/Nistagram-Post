@@ -8,7 +8,10 @@ import java.util.Collection;
 public interface CommentService {
 
     Comment findById(Long id) throws ResourceNotFoundException;
+
     Comment save(Comment comment, String writerUsername) throws ResourceNotFoundException;
+
     void delete(Long id) throws ResourceNotFoundException;
+
     Collection<Comment> findAllByPostId(Long postId);
 }

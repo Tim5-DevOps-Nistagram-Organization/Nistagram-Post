@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/unappropriatedContent")
 public class UnappropriatedContentController {
 
-    private UnappropriatedContentService unappropriatedContentService;
-    private UnappropriatedContentOrchestrator unappropriatedContentOrchestrator;
+    private final UnappropriatedContentService unappropriatedContentService;
+    private final UnappropriatedContentOrchestrator unappropriatedContentOrchestrator;
 
     @Autowired
-    public UnappropriatedContentController (
-        UnappropriatedContentService unappropriatedContentService,
-        UnappropriatedContentOrchestrator unappropriatedContentOrchestrator
+    public UnappropriatedContentController(
+            UnappropriatedContentService unappropriatedContentService,
+            UnappropriatedContentOrchestrator unappropriatedContentOrchestrator
     ) {
         this.unappropriatedContentService = unappropriatedContentService;
         this.unappropriatedContentOrchestrator = unappropriatedContentOrchestrator;
@@ -40,14 +40,13 @@ public class UnappropriatedContentController {
     @PreAuthorize("hasRole('ROLE_REGULAR') || hasRole('ROLE_AGENT')")
     public ResponseEntity<String> create(
             @Valid @RequestBody UnappropriatedContentCreateRequestDTO contentRequestDTO,
-            Principal principal) throws ResourceNotFoundException
-    {
+            Principal principal) throws ResourceNotFoundException {
         unappropriatedContentService.create(
                 UnappropriatedContentMapper.newToEntity(contentRequestDTO), principal.getName());
         return new ResponseEntity<>("Request is successfully saved.", HttpStatus.OK);
     }
 
-    @PutMapping(path="/approve/{requestId}")
+    @PutMapping(path = "/approve/{requestId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> approve(@PathVariable Long requestId)
             throws ResourceNotFoundException, MessagingException {
@@ -56,21 +55,21 @@ public class UnappropriatedContentController {
         return new ResponseEntity<>("Request is successfully approved.", HttpStatus.OK);
     }
 
-    @PutMapping(path="/reject/{requestId}")
+    @PutMapping(path = "/reject/{requestId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> reject(@PathVariable Long requestId) throws ResourceNotFoundException {
-        UnappropriatedContent content = unappropriatedContentService.reject(requestId);
+        unappropriatedContentService.reject(requestId);
         return new ResponseEntity<>("Request is successfully rejceted.", HttpStatus.OK);
     }
 
-    @GetMapping(path="/requests")
+    @GetMapping(path = "/requests")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UnappropriatedContentResponseDTO>> getAllRequest() throws ResourceNotFoundException {
         List<UnappropriatedContentResponseDTO> retVal =
                 unappropriatedContentService.findAllRequested()
-                    .stream()
-                    .map(content -> UnappropriatedContentMapper.toDto(content))
-                    .collect(Collectors.toList());
+                        .stream()
+                        .map(UnappropriatedContentMapper::toDto)
+                        .collect(Collectors.toList());
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 

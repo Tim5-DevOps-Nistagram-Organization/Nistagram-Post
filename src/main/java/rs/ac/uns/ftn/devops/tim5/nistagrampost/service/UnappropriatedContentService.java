@@ -9,9 +9,14 @@ import java.util.Collection;
 public interface UnappropriatedContentService {
 
     UnappropriatedContent findById(Long id) throws ResourceNotFoundException;
+
     UnappropriatedContent create(UnappropriatedContent content, String username) throws ResourceNotFoundException;
+
     UnappropriatedContent approve(Long id) throws ResourceNotFoundException, MessagingException;
+
     UnappropriatedContent reject(Long id) throws ResourceNotFoundException;
+
     Collection<UnappropriatedContent> findAllRequested() throws ResourceNotFoundException;
+
     void delete(Long id) throws ResourceNotFoundException;
 }

@@ -2,14 +2,10 @@ package rs.ac.uns.ftn.devops.tim5.nistagrampost.integration;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.constants.*;
@@ -19,9 +15,12 @@ import rs.ac.uns.ftn.devops.tim5.nistagrampost.mapper.CommentMapper;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.mapper.PostMapper;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.mapper.ReactionMapper;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.mapper.UnappropriatedContentMapper;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.*;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Comment;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Post;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.Reaction;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.UnappropriatedContent;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.ReactionEnum;
-import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnapropriatedContentState;
+import rs.ac.uns.ftn.devops.tim5.nistagrampost.model.enums.UnappropriatedContentState;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.repository.PostRepository;
 import rs.ac.uns.ftn.devops.tim5.nistagrampost.service.*;
 
@@ -30,7 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -40,10 +40,10 @@ import static org.junit.Assert.*;
 public class PostIntegrationTest {
 
     @Autowired
-    private PostService postService;
+    PostRepository postRepository;
 
     @Autowired
-    PostRepository postRepository;
+    private PostService postService;
 
     @Autowired
     private UserService userService;
@@ -67,7 +67,7 @@ public class PostIntegrationTest {
         // create tagDTOSet
         tagDTOSet = new HashSet<>();
         tagDTOSet.addAll(
-            TagConstants.VALID_TAG_NAMES.stream().map(TagDTO::new).collect(Collectors.toList())
+                TagConstants.VALID_TAG_NAMES.stream().map(TagDTO::new).collect(Collectors.toList())
         );
     }
 
@@ -119,11 +119,10 @@ public class PostIntegrationTest {
         Comment comment = commentService.save(CommentMapper.toEntity(commentCreateDTO), UserConstants.VALID_USERNAME);
 
         assertNotNull(comment.getId());
-        assertEquals(CommentConstants.COMMENT_MESSAGE , comment.getMessage());
+        assertEquals(CommentConstants.COMMENT_MESSAGE, comment.getMessage());
         assertEquals(VALID_POST_ID, comment.getPost().getId());
-        assertEquals(UserConstants.VALID_USERNAME,comment.getWriter().getUsername());
+        assertEquals(UserConstants.VALID_USERNAME, comment.getWriter().getUsername());
     }
-
 
 
     /*
@@ -161,9 +160,9 @@ public class PostIntegrationTest {
         Reaction reaction = reactionService.create(ReactionMapper.newToEntity(requestDTO), UserConstants.VALID_USERNAME);
 
         assertNotNull(reaction.getId());
-        assertEquals( ReactionEnum.LIKE.getValue(), reaction.getReaction().getValue());
+        assertEquals(ReactionEnum.LIKE.getValue(), reaction.getReaction().getValue());
         assertEquals(VALID_POST_ID, reaction.getPost().getId());
-        assertEquals(UserConstants.VALID_USERNAME,reaction.getUser().getUsername());
+        assertEquals(UserConstants.VALID_USERNAME, reaction.getUser().getUsername());
     }
 
     /*
@@ -176,7 +175,7 @@ public class PostIntegrationTest {
     public void testReactionCreation_InvalidPostId() throws ResourceNotFoundException {
 
         ReactionCreateRequestDTO requestDTO =
-                new ReactionCreateRequestDTO( PostConstants.INVALID_POST_ID, ReactionEnum.LIKE.getValue());
+                new ReactionCreateRequestDTO(PostConstants.INVALID_POST_ID, ReactionEnum.LIKE.getValue());
         reactionService.create(ReactionMapper.newToEntity(requestDTO), UserConstants.VALID_USERNAME);
 
     }
@@ -199,13 +198,13 @@ public class PostIntegrationTest {
         UnappropriatedContentCreateRequestDTO requestDTO =
                 new UnappropriatedContentCreateRequestDTO(VALID_POST_ID, UnappropriatedConstants.DESCRIPTION);
         UnappropriatedContent unappropriatedContent = unappropriatedContentService.create(
-                        UnappropriatedContentMapper.newToEntity(requestDTO), UserConstants.VALID_USERNAME);
+                UnappropriatedContentMapper.newToEntity(requestDTO), UserConstants.VALID_USERNAME);
 
         assertNotNull(unappropriatedContent.getId());
-        assertEquals(  UnappropriatedConstants.DESCRIPTION, unappropriatedContent.getDescription());
-        assertEquals(UserConstants.VALID_USERNAME,unappropriatedContent.getInitiator().getUsername());
+        assertEquals(UnappropriatedConstants.DESCRIPTION, unappropriatedContent.getDescription());
+        assertEquals(UserConstants.VALID_USERNAME, unappropriatedContent.getInitiator().getUsername());
         assertEquals(VALID_POST_ID, unappropriatedContent.getPostId());
-        assertEquals(UnapropriatedContentState.REQUESTED.getValue(), unappropriatedContent.getState().getValue());
+        assertEquals(UnappropriatedContentState.REQUESTED.getValue(), unappropriatedContent.getState().getValue());
 
     }
 

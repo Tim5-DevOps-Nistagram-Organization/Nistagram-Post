@@ -16,9 +16,9 @@ import java.util.Collection;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private CommentRepository commentRepository;
-    private PostService postService;
-    private UserService userService;
+    private final CommentRepository commentRepository;
+    private final PostService postService;
+    private final UserService userService;
 
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository,

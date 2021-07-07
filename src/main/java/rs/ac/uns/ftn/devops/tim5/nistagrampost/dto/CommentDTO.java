@@ -16,6 +16,4 @@ public class CommentDTO {
     private String writerUsername;
     private String message;
     private Date date;
-    private Long postId;
-    private Long id;
 }

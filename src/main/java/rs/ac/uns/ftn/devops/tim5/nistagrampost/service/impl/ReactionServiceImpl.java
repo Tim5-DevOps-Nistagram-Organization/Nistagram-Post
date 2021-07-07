@@ -14,9 +14,9 @@ import java.util.Collection;
 @Service
 public class ReactionServiceImpl implements ReactionService {
 
-    private ReactionRepository reactionRepository;
     private final PostService postService;
     private final UserService userService;
+    private final ReactionRepository reactionRepository;
 
 
     @Autowired
@@ -57,5 +57,10 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public Collection<Reaction> findAllByPostId(Long id) {
         return reactionRepository.findAllByPostId(id);
+    }
+
+    @Override
+    public Reaction findByPostIdAndUserUsername(Long id, String username) {
+        return reactionRepository.findByPost_IdAndUser_Username(id, username).orElse(null);
     }
 }

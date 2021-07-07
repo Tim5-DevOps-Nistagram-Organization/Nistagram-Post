@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnappropriatedContentResponseDTO {
-
+public class PostDetailsDTO {
     private Long id;
-    private String requesterUsername;
-    private String description;
     private Long mediaId;
+    private String username;
+    private String description;
+    private ReactionDTO reaction;
 }
