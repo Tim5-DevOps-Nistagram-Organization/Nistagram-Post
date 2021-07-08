@@ -74,7 +74,6 @@ public class Consumer {
             message.getAction().equals(Constants.ROLLBACK_ACTION)) {
         ReactionMessage reactionMessage = gson.fromJson(msg, ReactionMessage.class);
         reactionService.delete(reactionMessage.getReactionId());
-        //@TODO: da li slati adminima mejl da je puklo negde
         } else if (message.getReplayTopic().equals(Constants.UNAPPROPRIATED_CONTENT_ORCHESTRATOR_TOPIC) &&
                 message.getAction().equals(Constants.ROLLBACK_ACTION)) {
             ContentReportMessage contentReportMessage = gson.fromJson(msg, ContentReportMessage.class);
